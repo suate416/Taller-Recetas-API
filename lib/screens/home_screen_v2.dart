@@ -78,25 +78,23 @@ class _HomeScreenV2State extends State<HomeScreenV2> {
             );
           }
 
-          final recipes = snapshot.data ?? [];
+          final recetasData = snapshot.data ?? [];
 
-          if (recipes.isEmpty) {
+          if (recetasData.isEmpty) {
             return const Center(child: Text('No hay recetas disponibles'));
           }
-          return RefreshIndicator(
-            onRefresh: () async => setState(() {}),
-            child: GridView.builder(
-              padding: const EdgeInsets.all(12),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.75,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemCount: recipes.length,
-              itemBuilder: (context, index) {
-                final recipe = recipes[index];
-                return Card(
+          return GridView.builder(
+            padding: const EdgeInsets.all(12),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.75,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+            ),
+            itemCount: recetasData.length,
+            itemBuilder: (context, index) {
+              final recetaActual = recetasData[index];
+              return Card(
                   margin: const EdgeInsets.only(bottom: 12),
                   elevation: 4,
                   shadowColor: const Color.fromARGB(255, 185, 74, 0),
@@ -108,7 +106,7 @@ class _HomeScreenV2State extends State<HomeScreenV2> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PlatilloScreen(receta: recipe),
+                          builder: (context) => PlatilloScreen(receta: recetaActual),
                         ),
                       );
                     },
@@ -118,7 +116,7 @@ class _HomeScreenV2State extends State<HomeScreenV2> {
                         Expanded(
                           flex: 3,
                           child: Image.network(
-                            recipe.image,
+                            recetaActual.image,
                             width: double.infinity,
                             fit: BoxFit.cover,
                           ),
@@ -132,7 +130,7 @@ class _HomeScreenV2State extends State<HomeScreenV2> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  recipe.name,
+                                  recetaActual.name,
                                   maxLines: 2,
                                   style: const TextStyle(
                                     fontSize: 20,
@@ -148,14 +146,14 @@ class _HomeScreenV2State extends State<HomeScreenV2> {
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
-                                      '${recipe.rating}',
+                                      '${recetaActual.rating}',
                                       style: Theme.of(
                                         context,
                                       ).textTheme.labelSmall,
                                     ),
                                     const Spacer(),
                                     Text(
-                                      recipe.cuisine,
+                                      recetaActual.cuisine,
                                       style: Theme.of(
                                         context,
                                       ).textTheme.labelSmall,
@@ -171,8 +169,7 @@ class _HomeScreenV2State extends State<HomeScreenV2> {
                   ),
                 );
               },
-            ),
-          );
+            );
         },
       ),
     );

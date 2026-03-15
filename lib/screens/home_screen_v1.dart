@@ -12,6 +12,8 @@ class HomeScreenV1 extends StatefulWidget {
 
 class _HomeScreenV1State extends State<HomeScreenV1> {
   final RecetasApiService _recetasService = RecetasApiService();
+  //Se crea un objeto de la clase RecetasApiService y se guarda en _recetasService
+  //usa el objeto para hacer la peticion a la API y obtener las recetas
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +28,12 @@ class _HomeScreenV1State extends State<HomeScreenV1> {
         foregroundColor: Colors.white,
         toolbarHeight: 80,
       ),
-      body: FutureBuilder<List<Recipe>>(
-        future: _recetasService.fetchRecetas(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: FutureBuilder<List<Recipe>>( //futurebuilder siempre es asincono
+        future: _recetasService.fetchRecetas(), //se usa el objeto para llamar a fetchRecetas
+        builder: (context, snapshot) { //context es el contextoen el que se esta construyendo la pantalla
+          //snapshot es el estado de la peticion, sea bueno o malo
+ 
+          if (snapshot.connectionState == ConnectionState.waiting) { //peticion en proceso
             return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -42,7 +46,7 @@ class _HomeScreenV1State extends State<HomeScreenV1> {
             );
           }
 
-          if (snapshot.hasError) {
+          if (snapshot.hasError) { //ERROR
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -77,20 +81,19 @@ class _HomeScreenV1State extends State<HomeScreenV1> {
             );
           }
 
-          final recipes = snapshot.data ?? [];
+          final recetasData = snapshot.data ?? []; 
+          //los datos obtenido del snapshot se guardan en recetasData
 
-          if (recipes.isEmpty) {
+          if (recetasData.isEmpty) { //si no hay recetas disponibles
             return const Center(child: Text('No hay recetas disponibles'));
           }
-
-          return RefreshIndicator(
-            onRefresh: () async => setState(() {}),
-            child: ListView.builder(
-              padding: const EdgeInsets.all(12),
-              itemCount: recipes.length,
-              itemBuilder: (context, index) {
-                final recipe = recipes[index];
-                return ListTile(
+          //empieza a construir la pantalla
+          return ListView.builder(
+            padding: const EdgeInsets.all(12),
+            itemCount: recetasData.length,
+            itemBuilder: (context, index) {
+              final recetaActual = recetasData[index]; //toma la receta actual de la lista
+              return ListTile( //Se crea un ListTile para cada receta
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 8,
@@ -98,14 +101,14 @@ class _HomeScreenV1State extends State<HomeScreenV1> {
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.network(
-                      recipe.image,
+                      recetaActual.image,
                       height: 56,
                       width: 56,
                       fit: BoxFit.cover,
                     ),
                   ),
                   title: Text(
-                    recipe.name,
+                    recetaActual.name,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   subtitle: Column(
@@ -122,7 +125,7 @@ class _HomeScreenV1State extends State<HomeScreenV1> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            recipe.cuisine,
+                            recetaActual.cuisine,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -136,7 +139,7 @@ class _HomeScreenV1State extends State<HomeScreenV1> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '${recipe.rating}',
+                            '${recetaActual.rating}',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -146,7 +149,7 @@ class _HomeScreenV1State extends State<HomeScreenV1> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '${recipe.prepTimeMinutes + recipe.cookTimeMinutes} min · ${recipe.servings} porciones',
+                        '${recetaActual.prepTimeMinutes + recetaActual.cookTimeMinutes} min · ${recetaActual.servings} porciones',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -158,16 +161,17 @@ class _HomeScreenV1State extends State<HomeScreenV1> {
                     Icons.chevron_right,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                  onTap: () => Navigator.push(
+                  onTap: () => Navigator.push( 
+                    //ir a la pantalla de detalles del plato
                     context,
                     MaterialPageRoute(
-                      builder: (_) => PlatilloScreen(receta: recipe),
+                      builder: (_) => PlatilloScreen(receta: recetaActual),
+                      //se pasa la receta actual con onTap a la pantalla de detalles
                     ),
                   ),
                 );
               },
-            ),
-          );
+            );
         },
       ),
     );

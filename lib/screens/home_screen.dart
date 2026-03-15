@@ -92,24 +92,21 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }
 
-          final recipes = snapshot.data ?? [];
+          final recetasData = snapshot.data ?? [];
 
-          if (recipes.isEmpty) {
+          if (recetasData.isEmpty) {
             return const Center(
               child: Text('No hay recetas disponibles'),
             );
           }
 
-          return RefreshIndicator(
-            onRefresh: () async => setState(() {}),
-            child: ListView.builder(
-              padding: const EdgeInsets.all(12),
-              itemCount: recipes.length,
-              itemBuilder: (context, index) {
-                final recipe = recipes[index];
-                return _RecipeCard(recipe: recipe);
-              },
-            ),
+          return ListView.builder(
+            padding: const EdgeInsets.all(12),
+            itemCount: recetasData.length,
+            itemBuilder: (context, index) {
+              final recetaActual = recetasData[index];
+              return _RecipeCard(recipe: recetaActual);
+            },
           );
         },
       ),

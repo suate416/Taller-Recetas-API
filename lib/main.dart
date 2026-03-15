@@ -4,11 +4,11 @@ import 'screens/home_screen_v2.dart'; //con grids
 import 'screens/home_screen_v3.dart'; //Card personalizada version mas compleja
 import 'screens/home_screen.dart'; //Con todas las vistas, practica de navegacion entre vistas
 
-void main() {
+void main() { //inicio de la aplicacion
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget {//clase que crea la app
   const MyApp({super.key});
 
   @override
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color.fromARGB(255, 185, 74, 0),
         ),
       ),
-      home: const HomeScreen(),
+      home: const HomeScreenV3(),
     );
   }
 }

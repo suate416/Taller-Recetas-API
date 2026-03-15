@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../models/recetas.dart';
 
+//es stateless porque solo recibe datos no los modifica, basicamente es una plantilla
 class PlatilloScreen extends StatelessWidget {
+  
   const PlatilloScreen({super.key, required this.receta});
-  final Recipe receta;
+  //paranetros del constructor, 
+  final Recipe receta; //debe recibir una receta
 
   @override
   Widget build(BuildContext context) {
